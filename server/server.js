@@ -3,6 +3,7 @@ const express = require('express');
 const http = require("http");
 const hbs = require('hbs');
 const socketIO = require('socket.io');
+const {generateMsg} = require('./utils/message');
 
 var publicPath = path.join(__dirname + './../public');
 var port = process.env.PORT || 3000;
@@ -33,11 +34,7 @@ io.on('connection', (socket) => {
 
     socket.on('createMessage', (data) => {
         console.log('I am sending a message to all the clients!');
-        // io.emit('sendMessage', {
-        //     from: data.sender,
-        //     text: data.text,
-        //     createdAt: new Date().getTime()
-        // });
+        io.emit('sendMessage', generateMsg('Fateh', 'Socket.io is awesome'));
         // socket.broadcast.emit('sendMessage', {
         //     from: data.sender,
         //     text: data.text,

@@ -16,7 +16,7 @@ socket.on('disconnect', function () {
 socket.on('sendMessage', function(data) {
     console.log('Client: ', data.from);
     console.log('Message: ', data.text);
-    console.log('Received On: ', data.createdAt);
+    console.log('Received On: ', data.generatedAt);
 });
 
 socket.on('welcome', function(data) {
