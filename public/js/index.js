@@ -6,9 +6,7 @@ socket.on('connect', function () {
     socket.emit('createMessage', {
         sender: 'Fateh@uettaxila.com',
         text: 'I am done! Really!'
-    }
-    );
-
+    });
 });
 
 socket.on('disconnect', function () {
@@ -20,5 +18,9 @@ socket.on('sendMessage', function(data) {
     console.log('Message: ', data.text);
     console.log('Received On: ', data.createdAt);
 });
+
+socket.on('welcome', function(data) {
+    console.log('Admin: ', data.message);
+})
 
 

@@ -21,13 +21,28 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('New User Connected');
-    
+
+    socket.emit('welcome', {
+        message: 'Welcome to Bootcamp'
+    });
+
+    socket.broadcast.emit('welcome', {
+        message: 'New user has joined'
+    }) 
+
+
     socket.on('createMessage', (data) => {
-        io.emit('sendMessage', {
-            from: data.sender,
-            text: data.text,
-            createdAt: new Date().getTime()
-        });
+        console.log('I am sending a message to all the clients!');
+        // io.emit('sendMessage', {
+        //     from: data.sender,
+        //     text: data.text,
+        //     createdAt: new Date().getTime()
+        // });
+        // socket.broadcast.emit('sendMessage', {
+        //     from: data.sender,
+        //     text: data.text,
+        //     createdAt: new Date().getTime()
+        // });
     });
 
     socket.on('disconnect', () => {
