@@ -22,19 +22,12 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('New User Connected');
     
-    socket.emit('newmail', {
-        from: 'fateh@aorta.com',
-        text: 'Hey man! you got dope?',
-        time: new Date().getDate()
-    });
-
-    socket.emit('sendMessage', {
-        message: 'How Are You'
-    })
-
     socket.on('createMessage', (data) => {
-        //socket.emit('sendMessage', data)
-        console.log('Sidra: ', data.message)
+        io.emit('sendMessage', {
+            from: data.sender,
+            text: data.text,
+            createdAt: new Date().getTime()
+        });
     });
 
     socket.on('disconnect', () => {
