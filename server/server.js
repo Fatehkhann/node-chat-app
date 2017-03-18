@@ -32,9 +32,10 @@ io.on('connection', (socket) => {
     }) 
 
 
-    socket.on('createMessage', (data) => {
+    socket.on('createMessage', (data, callback) => {
         console.log('I am sending a message to all the clients!');
-        io.emit('sendMessage', generateMsg('Fateh', 'Socket.io is awesome'));
+        io.emit('sendMessage', generateMsg(data.name, data.text));
+        callback('From Server');
         // socket.broadcast.emit('sendMessage', {
         //     from: data.sender,
         //     text: data.text,
