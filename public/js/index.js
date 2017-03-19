@@ -14,11 +14,19 @@ socket.on('disconnect', function () {
 });
 
 socket.on('sendMessage', function (data) {
-    console.log('Client: ', data.from);
-    console.log('Message: ', data.text);
-    console.log('Received On: ', data.generatedAt);
+    var formattedTime = moment(data.generatedAt).format('h:mm a');
     var li = jQuery('<li></li>');
-    li.text(`${data.from}: ${data.text} on ${data.generatedAt}`);
+    li.text(`${data.from} (${formattedTime}): ${data.text}`);
+    jQuery('#messages').append(li);
+});
+
+socket.on('newLocationMessage', function (message) {
+    var formattedTime = moment(message.generatedAt).format('h:mm a');
+    var li = jQuery('<li></li>');
+    var a = jQuery('<a target="_blank">My Current Location</a>')
+    li.text(`${message.from}: (${formattedTime}) `);
+    a.attr('href', message.url);
+    li.append(a);
     jQuery('#messages').append(li);
 });
 
@@ -32,15 +40,6 @@ socket.emit('createMessage', {
 }, function (data) {
     console.log('Got it! ', data);
 });
-
-socket.on('newLocationMessage', function (message) {
-    var li = jQuery('<li></li>');
-    var a = jQuery('<a target="_blank">My Current Location</a>')
-    li.text(`${message.from}: `);
-    a.attr('href', message.url);
-    li.append(a);
-    jQuery('#messages').append(li);
-})
 
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();
