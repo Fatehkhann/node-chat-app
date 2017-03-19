@@ -17,23 +17,33 @@ function scrollToBottom () {
 }
 
 socket.on('connect', function () {
-    console.log('Connected to server');
+    var params = jQuery.deparam(window.location.search);
 
-    // socket.emit('createMessage', {
-    //     sender: 'Fateh@uettaxila.com',
-    //     text: 'I am done! Really!'
-    // });
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log('No Error');
+        }
+    })
 });
 
 socket.on('disconnect', function () {
     console.log('Disconnected form server');
 });
 
-socket.on('sendMessage', function (data) {
-    // var formattedTime = moment(data.generatedAt).format('h:mm a');
-    // var li = jQuery('<li></li>');
-    // li.text(`${data.from} (${formattedTime}): ${data.text}`);
-    // jQuery('#messages').append(li);
+socket.on('updateUserList', function (users) {
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user))
+    });
+
+    jQuery('#users').html(ol);
+})
+
+socket.on('newMessage', function (data) {
     var formattedTime = moment(data.generatedAt).format('h:mm a');
     var template = jQuery('#message-template').html();
     var html = Mustache.render(template, { 
@@ -41,6 +51,7 @@ socket.on('sendMessage', function (data) {
         from: data.from,
         createdAt: formattedTime
     });
+
     jQuery('#messages').append(html);
     scrollToBottom();
 });
@@ -53,24 +64,16 @@ socket.on('newLocationMessage', function (message) {
         from: message.from,
         createdAt: formattedTime
     });
+
     jQuery('#messages').append(html);
     scrollToBottom();
 });
 
-socket.on('welcome', function (data) {
-    console.log('Admin: ', data.message);
-});
-
-socket.emit('createMessage', {
-    name: 'Sidra Amin',
-    text: 'She is awesome'
-}, function (data) {
-    console.log('Got it! ', data);
-});
-
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();
+
     var msgTextBox = jQuery('[name=message]');
+    
     socket.emit('createMessage', {
         name: 'Sidra Amin',
         text: msgTextBox.val()
@@ -99,5 +102,18 @@ locationBtn.on('click', function () {
         locationBtn.removeAttr('disabled').text('Send location');
     });
 });
+
+// socket.on('welcome', function (data) {
+//     console.log('Admin: ', data.message);
+// });
+
+// socket.emit('createMessage', {
+//     name: 'Sidra Amin',
+//     text: 'She is awesome'
+// }, function (data) {
+//     console.log('Got it! ', data);
+// });
+
+
 
 
