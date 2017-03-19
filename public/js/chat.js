@@ -73,9 +73,7 @@ jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();
 
     var msgTextBox = jQuery('[name=message]');
-    
     socket.emit('createMessage', {
-        name: 'Sidra Amin',
         text: msgTextBox.val()
     }, function (data) {
         msgTextBox.val('');
